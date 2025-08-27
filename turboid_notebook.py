@@ -41,14 +41,14 @@ def _(df, mo):
     experiment_1 = mo.ui.dropdown(
         options=sorted(list(set(df["comparison_concat"]))),
         label="Choose your first comparison (x axis)",
-        value=list(set(df["comparison_concat"]))[0],
+        value=sorted(list(set(df["comparison_concat"])))[0],
         searchable=True,
     )
 
     experiment_2 = mo.ui.dropdown(
         options=sorted(list(set(df["comparison_concat"]))),
         label="Choose your second comparison (y axis)",
-        value=list(set(df["comparison_concat"]))[6],
+        value=sorted(list(set(df["comparison_concat"])))[1],
         searchable=True,
     )
     mo.vstack([experiment_1, experiment_2])
@@ -60,10 +60,10 @@ def _(alt, df, experiment_1, experiment_2, mo, pl):
     def scatter_2(df):
         x = f"log2_FC_{experiment_1.selected_key}"
         y = f"log2_FC_{experiment_2.selected_key}"
-    
+
         # Filter out inf and NaN values
         valid_df = df.filter(pl.col(x).is_finite() & pl.col(y).is_finite())
-    
+
         domain_min = min(valid_df[x].min(), valid_df[y].min())
         domain_max = max(valid_df[x].max(), valid_df[y].max()) * 1.1
         # Define the main plot domain and margin position
